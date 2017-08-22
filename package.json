@@ -1,0 +1,26 @@
+{
+  "name": "bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app/index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ricascencio/myTestChench.git"
+  },
+  "keywords": [
+    "Telegram"
+  ],
+  "author": "Chenchito",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ricascencio/myTestChench/issues"
+  },
+  "homepage": "https://github.com/ricascencio/myTestChench#readme",
+  "dependencies": {
+    "config": "^1.26.2",
+    "telegraf": "^3.9.0"
+  }
+}
