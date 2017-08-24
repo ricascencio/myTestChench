@@ -4,7 +4,8 @@
   "description": "",
   "main": "app/index.js",
   "scripts": {
-    "test": "test"
+    "test": "test",
+    "start": "node dist/index.js"
   },
   "repository": {
     "type": "git",
@@ -20,7 +21,13 @@
   },
   "homepage": "https://github.com/ricascencio/myTestChench#readme",
   "dependencies": {
+    "apiai": "^4.0.3",
+    "body-parser": "^1.17.2",
     "config": "^1.26.2",
+    "console-stamp": "^0.2.5",
+    "express": "^4.15.4",
+    "node-uuid": "^1.4.8",
+    "request": "^2.81.0",
     "telegraf": "^3.9.0"
   }
 }
