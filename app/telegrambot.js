@@ -52,9 +52,6 @@ module.exports = class TelegramBot {
             language: botConfig.apiaiLang,
             requestSource: "telegram"
         };
-console.log('botConfig.apiaiAccessToken ' + botConfig.apiaiAccessToken);
-console.log('botConfig.apiaiLang ' + botConfig.apiaiLang);
-console.log('botConfig.telegramToken ' + botConfig.telegramToken);
         this._apiaiService = apiai(botConfig.apiaiAccessToken, apiaiOptions);
         this._sessionIds = new Map();
 
@@ -95,23 +92,28 @@ console.log('botConfig.telegramToken ' + botConfig.telegramToken);
         });
     }
 
-    processMessage(req, res) {
+processMessage(req, res) {
         if (this._botConfig.devConfig) {
             console.log("body", req.body);
         }
 
         let updateObject = req.body;
-
-        if (updateObject && updateObject.message) {
-            let msg = updateObject.message;
-
+        
+        if (updateObject && updateObject.result.action) {
+            
+            //let msg = updateObject.message;
+            
             var chatId;
 
-            if (msg.chat) {
-                chatId = msg.chat.id;
-            }
+            //if (msg.chat) {
+                chatId = req.body.originalRequest.data.message.chat.id;
+            //}
+            
+            var km = updateObject.result.parameters.kilometros;
+            var lts = updateObject.result.parameters.litros;
+            var efficiency = (km/lts).toFixed(2);
 
-            let messageText = msg.text;
+            let messageText = 'En ' + km + ' kms tuviste un rendimiento de ' + efficiency;
 
             console.log(chatId, messageText);
 
@@ -127,8 +129,11 @@ console.log('botConfig.telegramToken ' + botConfig.telegramToken);
 
                 apiaiRequest.on('response', (response) => {
                     if (TelegramBot.isDefined(response.result)) {
-                        let responseText = response.result.fulfillment.speech;
+                        let responseText = messageText;//response.result.fulfillment.speech;
                         let responseData = response.result.fulfillment.data;
+                        
+                        console.log('responseText', responseText);
+                        console.log('responseData', responseData);
 
                         if (TelegramBot.isDefined(responseData) && TelegramBot.isDefined(responseData.telegram)) {
 
@@ -165,11 +170,11 @@ console.log('botConfig.telegramToken ' + botConfig.telegramToken);
                 apiaiRequest.end();
             }
             else {
-                console.log('Empty message');
+                console.log('Empty message  (chatId && messageText)');
                 return TelegramBot.createResponse(res, 200, 'Empty message');
             }
         } else {
-            console.log('Empty message');
+            console.log('Empty message (updateObject && updateObject.message)');
             return TelegramBot.createResponse(res, 200, 'Empty message');
         }
     }

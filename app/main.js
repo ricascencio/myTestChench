@@ -25,7 +25,7 @@ const TelegramBot = require('./telegrambot');
 const TelegramBotConfig = require('./telegrambotconfig');
 
 const REST_PORT = (process.env.PORT || 5000);
-const DEV_CONFIG = process.env.DEVELOPMENT_CONFIG == 'true';
+const DEV_CONFIG = 'true';
 
 const APIAI_ACCESS_TOKEN = config.get('APIAI_ACCESS_TOKEN');
 const APIAI_LANG = config.get('APIAI_LANG');
@@ -33,7 +33,7 @@ const TELEGRAM_TOKEN = config.get('TELEGRAM_TOKEN');
 
 console.log('TELEGRAM_TOKEN ' + TELEGRAM_TOKEN);
 
-var baseUrl = `https://chenchbot-rascencio.c9users.io`;
+var baseUrl = config.get('URL');
 
 
 // console timestamps
@@ -45,14 +45,15 @@ const botConfig = new TelegramBotConfig(
     TELEGRAM_TOKEN);
 
 botConfig.devConfig = DEV_CONFIG;
+console.log('DEV_CONFIG', DEV_CONFIG);
 
 const bot = new TelegramBot(botConfig, baseUrl);
-bot.start(() => {
-        console.log("Bot started");
-    },
-    (errStatus) => {
-        console.error('It seems the TELEGRAM_TOKEN is wrong! Please fix it.')
-    });
+// bot.start(() => {
+//         console.log("Bot started");
+//     },
+//     (errStatus) => {
+//         console.error('It seems the TELEGRAM_TOKEN is wrong! Please fix it.')
+//     });
 
 
 const app = express();
