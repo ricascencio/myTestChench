@@ -27,13 +27,10 @@ const TelegramBotConfig = require('./telegrambotconfig');
 const REST_PORT = (process.env.PORT || 5000);
 const DEV_CONFIG = 'true';
 
-const APIAI_ACCESS_TOKEN = config.get('APIAI_ACCESS_TOKEN');
-const APIAI_LANG = config.get('APIAI_LANG');
-const TELEGRAM_TOKEN = config.get('TELEGRAM_TOKEN');
-
-console.log('TELEGRAM_TOKEN ' + TELEGRAM_TOKEN);
-
-var baseUrl = config.get('URL');
+const APIAI_ACCESS_TOKEN = process.env.APIAI_ACCESS_TOKEN || config.get('APIAI_ACCESS_TOKEN');
+const APIAI_LANG = process.env.APIAI_LANG || config.get('APIAI_LANG');
+const TELEGRAM_TOKEN = process.env.TELEGRAM_TOKEN || config.get('TELEGRAM_TOKEN');
+const baseUrl = process.env.URL || config.get('URL');
 
 
 // console timestamps
