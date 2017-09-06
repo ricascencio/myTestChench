@@ -20,6 +20,7 @@ const apiai = require('apiai');
 const express = require('express');
 const bodyParser = require('body-parser');
 const config = require('config');
+const actions = require('./database/actions.js');
 
 const TelegramBot = require('./telegrambot');
 const TelegramBotConfig = require('./telegrambotconfig');
@@ -55,6 +56,16 @@ const bot = new TelegramBot(botConfig, baseUrl);
 
 const app = express();
 app.use(bodyParser.json());
+
+    // var now = new Date();
+    // console.log("date", now);
+    // //actions.insertFuelCharge();
+    // let res = actions.getLastFuelCharge(now, 'Polo', function(result){
+    //     console.log(result);
+    //     //console.log(err, result);
+    // });
+    // var days = now - res.date ;
+    // console.log("***DAYS = ", days);
 
 app.post('/webhook', (req, res) => {
     console.log('POST webhook');

@@ -19,6 +19,8 @@
 const apiai = require('apiai');
 const uuid = require('node-uuid');
 const request = require('request');
+const actions = require('./database/actions.js');
+
 
 module.exports = class TelegramBot {
 
@@ -100,20 +102,12 @@ processMessage(req, res) {
         let updateObject = req.body;
         
         if (updateObject && updateObject.result.action) {
+            var chatId = req.body.originalRequest.data.message.chat.id;
+            let messageText = '';
             
-            //let msg = updateObject.message;
-            
-            var chatId;
-
-            //if (msg.chat) {
-                chatId = req.body.originalRequest.data.message.chat.id;
-            //}
-            
-            var km = updateObject.result.parameters.kilometros;
-            var lts = updateObject.result.parameters.litros;
-            var efficiency = (km/lts).toFixed(2);
-
-            let messageText = 'En ' + km + ' kms tuviste un rendimiento de ' + efficiency;
+            if(updateObject.result.action === "calcularConsumo"){
+                messageText = this.calculateEfficiency(updateObject);
+            }
 
             console.log(chatId, messageText);
 
@@ -122,8 +116,7 @@ processMessage(req, res) {
                     this._sessionIds.set(chatId, uuid.v1());
                 }
 
-                let apiaiRequest = this._apiaiService.textRequest(messageText,
-                    {
+                let apiaiRequest = this._apiaiService.textRequest(messageText, {
                         sessionId: this._sessionIds.get(chatId)
                     });
 
@@ -131,12 +124,8 @@ processMessage(req, res) {
                     if (TelegramBot.isDefined(response.result)) {
                         let responseText = messageText;//response.result.fulfillment.speech;
                         let responseData = response.result.fulfillment.data;
-                        
-                        console.log('responseText', responseText);
-                        console.log('responseData', responseData);
 
                         if (TelegramBot.isDefined(responseData) && TelegramBot.isDefined(responseData.telegram)) {
-
                             console.log('Response as formatted message');
 
                             let telegramMessage = responseData.telegram;
@@ -177,6 +166,41 @@ processMessage(req, res) {
             console.log('Empty message (updateObject && updateObject.message)');
             return TelegramBot.createResponse(res, 200, 'Empty message');
         }
+    }
+    
+    //calculate oil efficiency
+    calculateEfficiency(updateObject){
+        var km = updateObject.result.parameters.kilometros;
+        var lts = updateObject.result.parameters.litros;
+        var car = updateObject.result.parameters.coche;
+        console.log("updateObject", updateObject);
+        var efficiency = (km/lts).toFixed(2);
+        
+        //search and insert charge only for my cars
+        if(car === 'polo' || car === 'versa'){
+            var now = new Date();
+            var diffDays = 0;
+            actions.getLastFuelCharge(now, car, function(result){
+                var timeDiff = Math.abs(now.getTime() - result.date.getTime());
+                diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
+                console.log("**DATE DIFF** ", diffDays);
+            });
+            
+            var charge = {
+                    date: now,
+                    kms: km,
+                    liters: lts,
+                    efficency: efficiency,
+                    car: car,
+                    days: diffDays
+            };
+            
+            actions.insertFuelCharge(charge, function(result){
+                console.log(result);
+            });
+        }
+        
+        return 'En ' + km + ' kms tuviste un rendimiento de ' + efficiency;
     }
 
     reply(msg) {
