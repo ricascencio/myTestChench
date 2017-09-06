@@ -26,7 +26,7 @@ const TelegramBot = require('./telegrambot');
 const TelegramBotConfig = require('./telegrambotconfig');
 
 const REST_PORT = (process.env.PORT || 5000);
-const DEV_CONFIG = 'true';
+const DEV_CONFIG = process.env.DEV_CONFIG || config.get('DEV_CONFIG');
 
 const APIAI_ACCESS_TOKEN = process.env.APIAI_ACCESS_TOKEN || config.get('APIAI_ACCESS_TOKEN');
 const APIAI_LANG = process.env.APIAI_LANG || config.get('APIAI_LANG');
@@ -43,7 +43,6 @@ const botConfig = new TelegramBotConfig(
     TELEGRAM_TOKEN);
 
 botConfig.devConfig = DEV_CONFIG;
-console.log('DEV_CONFIG', DEV_CONFIG);
 
 const bot = new TelegramBot(botConfig, baseUrl);
 // bot.start(() => {
@@ -56,16 +55,6 @@ const bot = new TelegramBot(botConfig, baseUrl);
 
 const app = express();
 app.use(bodyParser.json());
-
-    // var now = new Date();
-    // console.log("date", now);
-    // //actions.insertFuelCharge();
-    // let res = actions.getLastFuelCharge(now, 'Polo', function(result){
-    //     console.log(result);
-    //     //console.log(err, result);
-    // });
-    // var days = now - res.date ;
-    // console.log("***DAYS = ", days);
 
 app.post('/webhook', (req, res) => {
     console.log('POST webhook');

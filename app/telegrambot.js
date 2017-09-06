@@ -109,8 +109,6 @@ processMessage(req, res) {
                 messageText = this.calculateEfficiency(updateObject);
             }
 
-            console.log(chatId, messageText);
-
             if (chatId && messageText) {
                 if (!this._sessionIds.has(chatId)) {
                     this._sessionIds.set(chatId, uuid.v1());
@@ -168,22 +166,21 @@ processMessage(req, res) {
         }
     }
     
-    //calculate oil efficiency
+    //calculate fuel efficiency
     calculateEfficiency(updateObject){
         var km = updateObject.result.parameters.kilometros;
         var lts = updateObject.result.parameters.litros;
         var car = updateObject.result.parameters.coche;
-        console.log("updateObject", updateObject);
+        
         var efficiency = (km/lts).toFixed(2);
         
-        //search and insert charge only for my cars
+        //search and insert charges only for my cars
         if(car === 'polo' || car === 'versa'){
             var now = new Date();
             var diffDays = 0;
             actions.getLastFuelCharge(now, car, function(result){
                 var timeDiff = Math.abs(now.getTime() - result.date.getTime());
                 diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
-                console.log("**DATE DIFF** ", diffDays);
             });
             
             var charge = {
