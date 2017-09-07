@@ -7,7 +7,7 @@ let db = null;
 
 const connect = () => {
   if (!db) {
-    const dbURL = process.env.db_url || config.get('DB_URL');
+    const dbURL = process.env.DB_URL || config.get('DB_URL');
     mongoose.connect(dbURL, {useMongoClient:true});
     db = mongoose.connection;   
   }
