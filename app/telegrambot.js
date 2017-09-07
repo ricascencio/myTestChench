@@ -179,11 +179,12 @@ processMessage(req, res) {
         if(car === 'polo' || car === 'versa'){
             var now = new Date();
             var diffDays = 0;
+            console.log("BEFORE GETLASTFUEL**");
             actions.getLastFuelCharge(now, car, function(result){
                 var timeDiff = Math.abs(now.getTime() - result.date.getTime());
                 diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
             });
-            
+            console.log("AFTER GETLASTFUEL**");
             var charge = {
                     date: now,
                     kms: km,
