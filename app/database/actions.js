@@ -11,7 +11,6 @@ const connect = () => {
     mongoose.connect(dbURL, {useMongoClient:true});
     db = mongoose.connection;   
   }
- console.log("connection", db);
 };
 
 exports.insertFuelCharge = function(fuelCharge) {
@@ -29,10 +28,8 @@ exports.insertFuelCharge = function(fuelCharge) {
 
 exports.getLastFuelCharge = function(date, car, charges)  {
   connect();
-  console.log("** IN getLastFuelCharge");
     FuelCharge.findOne({"car": car}).sort({"date":-1}).limit(1, function (err, fuelCharge){
-        if (err) return console.error("ERR",err);
-        console.log("charges ", fuelCharge);
+        if (err) return console.error("ERR",err);        
          charges(fuelCharge);
     });
 };
