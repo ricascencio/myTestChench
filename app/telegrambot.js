@@ -106,10 +106,8 @@ processMessage(req, res) {
             let messageText = '';
             
             console.log("updateObject.result.action", updateObject.result.action);
-            if(updateObject.result.action === "calcularConsumo"){
-                console.log("ifCalculando");
-                messageText = "DEBUGG";
-                //messageText = this.calculateEfficiency(updateObject);
+            if(updateObject.result.action === "calcularConsumo"){                                
+                messageText = this.calculateEfficiency(updateObject);
             }
 
             if (chatId && messageText) {
