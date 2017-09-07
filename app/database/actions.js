@@ -9,9 +9,9 @@ const connect = () => {
   if (!db) {
     const dbURL = process.env.db_url || config.get('DB_URL');
     mongoose.connect(dbURL, {useMongoClient:true});
-    db = mongoose.connection;
-   console.log("connection", db);
+    db = mongoose.connection;   
   }
+ console.log("connection", db);
 };
 
 exports.insertFuelCharge = function(fuelCharge) {
