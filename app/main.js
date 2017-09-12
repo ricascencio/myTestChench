@@ -20,13 +20,13 @@ const apiai = require('apiai');
 const express = require('express');
 const bodyParser = require('body-parser');
 const config = require('config');
-const actions = require('./database/actions.js');
+const commands = require('./commands.js');
 
 const TelegramBot = require('./telegrambot');
 const TelegramBotConfig = require('./telegrambotconfig');
 
 const REST_PORT = (process.env.PORT || 5000);
-const DEV_CONFIG = process.env.DEV_CONFIG || config.get('DEV_CONFIG');
+const isDevelopment = process.env.NODE_ENV === 'development';
 
 const APIAI_ACCESS_TOKEN = process.env.APIAI_ACCESS_TOKEN || config.get('APIAI_ACCESS_TOKEN');
 const APIAI_LANG = process.env.APIAI_LANG || config.get('APIAI_LANG');
@@ -42,9 +42,11 @@ const botConfig = new TelegramBotConfig(
     APIAI_LANG,
     TELEGRAM_TOKEN);
 
-botConfig.devConfig = DEV_CONFIG;
+botConfig.devConfig = isDevelopment;
 
 const bot = new TelegramBot(botConfig, baseUrl);
+
+
 // bot.start(() => {
 //         console.log("Bot started");
 //     },
@@ -65,6 +67,8 @@ app.post('/webhook', (req, res) => {
         return res.status(400).send('Error while processing ' + err.message);
     }
 });
+
+
 
 app.listen(REST_PORT, function () {
     console.log('Rest service ready on port ' + REST_PORT);

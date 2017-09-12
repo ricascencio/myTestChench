@@ -21,7 +21,6 @@ const uuid = require('node-uuid');
 const request = require('request');
 const actions = require('./database/actions.js');
 
-
 module.exports = class TelegramBot {
 
     get apiaiService() {
@@ -107,7 +106,23 @@ processMessage(req, res) {
                         
             if(updateObject.result.action === "calcularConsumo"){                                
                 messageText = this.calculateEfficiency(updateObject);
-            }
+            }else if(updateObject.result.action === "getLastCharges"){
+                actions.getLastCharges().then(function(charges) {
+                    console.log('The promise was fulfilled with items!', charges);
+                    var result = {};
+                    result[0] = charges[0].car + ": Consumo de " + charges[0].efficency + " km/l. " + charges[0].liters + " litros en " + charges[0].days + " dias ";
+                    result[1] = charges[1].car + ": Consumo de " + charges[1].efficency + " km/l. " + charges[1].liters + " litros en " + charges[1].days + " dias ";
+                    messageText = result;
+                    }, function(err) {
+                      console.error('The promise was rejected', err, err.stack);
+                    });
+
+                // actions.getLastCharges(function(result){
+                //     console.log("actions.getLastCharges TELEGRAM");
+                //     messageText = result;
+                // });
+                
+                }
 
             if (chatId && messageText) {
                 if (!this._sessionIds.has(chatId)) {
@@ -176,30 +191,31 @@ processMessage(req, res) {
         
         //search and insert charges only for my cars
         if(car === 'polo' || car === 'versa'){
-            var now = new Date();
-            var diffDays = 0;
-            
-            actions.getLastFuelCharge(now, car, function(result){
-                var timeDiff = Math.abs(now.getTime() - result.date.getTime());
-                diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)); 
-            });
-            
+
             var charge = {
-                    date: now,
+                    date: new Date(),
                     kms: km,
                     liters: lts,
                     efficency: efficiency,
                     car: car,
-                    days: diffDays
+                    days: 0
             };
             
-            actions.insertFuelCharge(charge, function(result){
+            actions.addFuelCharge(charge, function(result){
                 console.log(result);
             });
         }
         
         return 'En ' + km + ' kms tuviste un rendimiento de ' + efficiency;
     }
+    
+    lastCharges(res){
+        actions.getLastCharges(function(result){
+            console.log("actions.getLastCharges TELEGRAM");
+            res(result);
+        });
+    }
+    
 
     reply(msg) {
         // https://core.telegram.org/bots/api#sendmessage
@@ -240,4 +256,7 @@ processMessage(req, res) {
 
         return obj != null;
     }
+    
+  
+  
 }
