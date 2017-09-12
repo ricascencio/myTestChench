@@ -109,6 +109,7 @@ processMessage(req, res) {
                         
             if(updateObject.result.action === "calcularConsumo"){                                
                 messageText = this.calculateEfficiency(updateObject);
+                self.sendProcessedMessage(self, req, res, chatId, messageText);
             }else if(updateObject.result.action === "getLastCharges"){
                 console.log("**IN**");
                 actions.getLastCharges(function(charges) {
@@ -118,6 +119,7 @@ processMessage(req, res) {
                 
                 console.log("***MESSAGETEXT ", messageText);
             
+                self.sendProcessedMessage(self, req, res, chatId, messageText);
             // //******
             //     if (chatId && messageText) {
             //         console.log("***THIS", self);
@@ -180,7 +182,6 @@ processMessage(req, res) {
             });
             }
             
-            self.sendProcessedMessage(self, req, res, chatId, messageText);
 
             // if (chatId && messageText) {
             //     if (!this._sessionIds.has(chatId)) {
