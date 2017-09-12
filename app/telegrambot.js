@@ -111,129 +111,14 @@ processMessage(req, res) {
                 messageText = this.calculateEfficiency(updateObject);
                 self.sendProcessedMessage(self, req, res, chatId, messageText);
             }else if(updateObject.result.action === "getLastCharges"){
-                console.log("**IN**");
                 actions.getLastCharges(function(charges) {
-                console.log('The promise was fulfilled with charges!', charges);
-                
-                messageText = charges[0].car + ": Consumo de " + charges[0].efficency + " km/l. " + charges[0].liters + " litros en " + charges[0].days + " dias. " + charges[1].car + ": Consumo de " + charges[1].efficency + " km/l. " + charges[1].liters + " litros en " + charges[1].days + " dias ";
-                
-                console.log("***MESSAGETEXT ", messageText);
-            
-                self.sendProcessedMessage(self, req, res, chatId, messageText);
-            // //******
-            //     if (chatId && messageText) {
-            //         console.log("***THIS", self);
-                    
-            //         if (!self._sessionIds.has(chatId)) {
-            //             self._sessionIds.set(chatId, uuid.v1());
-            //         }
-                
-            //         let apiaiRequest = self._apiaiService.textRequest(messageText, {
-            //                 sessionId: self._sessionIds.get(chatId)
-            //             });
-                
-            //         apiaiRequest.on('response', (response) => {
-            //             if (TelegramBot.isDefined(response.result)) {
-            //                 let responseText = messageText;//response.result.fulfillment.speech;
-            //                 let responseData = response.result.fulfillment.data;
-                
-            //                 if (TelegramBot.isDefined(responseData) && TelegramBot.isDefined(responseData.telegram)) {
-            //                     console.log('Response as formatted message');
-                
-            //                     let telegramMessage = responseData.telegram;
-            //                     telegramMessage.chat_id = chatId;
-                
-            //                     self.reply(telegramMessage);
-            //                     TelegramBot.createResponse(res, 200, 'Message processed');
-                
-            //                 } else if (TelegramBot.isDefined(responseText)) {
-            //                     console.log('Response as text message');
-            //                     self.reply({
-            //                         chat_id: chatId,
-            //                         text: responseText
-            //                     });
-            //                     TelegramBot.createResponse(res, 200, 'Message processed');
-                
-            //                 } else {
-            //                     console.log('Received empty speech');
-            //                     TelegramBot.createResponse(res, 200, 'Received empty speech');
-            //                 }
-            //             } else {
-            //                 console.log('Received empty result');
-            //                 TelegramBot.createResponse(res, 200, 'Received empty result');
-            //             }
-            //         });
-                
-            //         apiaiRequest.on('error', (error) => {
-            //             console.error('Error while call to api.ai', error);
-            //             TelegramBot.createResponse(res, 200, 'Error while call to api.ai');
-            //         });
-            //         apiaiRequest.end();
-            //     }
-            //     else {
-            //         console.log('Empty message  (chatId && messageText)');
-            //         return TelegramBot.createResponse(res, 200, 'Empty message');
-            //     }
-            
-            // //********
-            
-            }, function(err) {
-              console.error('The promise was rejected', err, err.stack);
-            });
+                    console.log('The promise was fulfilled with charges!');
+                    messageText = charges[0].car + ": " + charges[0].efficency + " km/l. " + charges[0].liters + " litros en " + charges[0].days + " dias. " + charges[1].car + ": " + charges[1].efficency + " km/l. " + charges[1].liters + " litros en " + charges[1].days + " dias ";
+                    self.sendProcessedMessage(self, req, res, chatId, messageText);
+                }, function(err) {
+                    console.error('The promise was rejected', err, err.stack);
+                });
             }
-            
-
-            // if (chatId && messageText) {
-            //     if (!this._sessionIds.has(chatId)) {
-            //         this._sessionIds.set(chatId, uuid.v1());
-            //     }
-
-            //     let apiaiRequest = this._apiaiService.textRequest(messageText, {
-            //             sessionId: this._sessionIds.get(chatId)
-            //         });
-
-            //     apiaiRequest.on('response', (response) => {
-            //         if (TelegramBot.isDefined(response.result)) {
-            //             let responseText = messageText;//response.result.fulfillment.speech;
-            //             let responseData = response.result.fulfillment.data;
-
-            //             if (TelegramBot.isDefined(responseData) && TelegramBot.isDefined(responseData.telegram)) {
-            //                 console.log('Response as formatted message');
-
-            //                 let telegramMessage = responseData.telegram;
-            //                 telegramMessage.chat_id = chatId;
-
-            //                 this.reply(telegramMessage);
-            //                 TelegramBot.createResponse(res, 200, 'Message processed');
-
-            //             } else if (TelegramBot.isDefined(responseText)) {
-            //                 console.log('Response as text message');
-            //                 this.reply({
-            //                     chat_id: chatId,
-            //                     text: responseText
-            //                 });
-            //                 TelegramBot.createResponse(res, 200, 'Message processed');
-
-            //             } else {
-            //                 console.log('Received empty speech');
-            //                 TelegramBot.createResponse(res, 200, 'Received empty speech');
-            //             }
-            //         } else {
-            //             console.log('Received empty result');
-            //             TelegramBot.createResponse(res, 200, 'Received empty result');
-            //         }
-            //     });
-
-            //     apiaiRequest.on('error', (error) => {
-            //         console.error('Error while call to api.ai', error);
-            //         TelegramBot.createResponse(res, 200, 'Error while call to api.ai');
-            //     });
-            //     apiaiRequest.end();
-            // }
-            // else {
-            //     console.log('Empty message  (chatId && messageText)');
-            //     return TelegramBot.createResponse(res, 200, 'Empty message');
-            // }
         } else {
             console.log('Empty message (updateObject && updateObject.message)');
             return TelegramBot.createResponse(res, 200, 'Empty message');
@@ -361,7 +246,4 @@ processMessage(req, res) {
 
         return obj != null;
     }
-    
-  
-  
-}
+};

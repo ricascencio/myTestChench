@@ -40,23 +40,8 @@ exports.getLastCharges = function(callback) {
     if(err) console.log(err);
     callback(charges);
   }).sort({date:-1}).limit(2);
-}
+};
 
-
-
-// result[0] = charges[0].car + ": Consumo de " + charges[0].efficency + " km/l. " + charges[0].liters + " litros en " + charges[0].days + " dias ";
-      // result[1] = charges[1].car + ": Consumo de " + charges[1].efficency + " km/l. " + charges[1].liters + " litros en " + charges[1].days + " dias ";
-
-// exports.getLastCharges = function(res) {
-//   connect();
-//   FuelCharge.find(function (err, charges){
-//     if (err) return console.error("ERR",err);
-//       const result = [];
-//       result[0] = charges[0].car + ": Consumo de " + charges[0].efficency + " km/l. " + charges[0].liters + " litros en " + charges[0].days + " dias ";
-//       result[1] = charges[1].car + ": Consumo de " + charges[1].efficency + " km/l. " + charges[1].liters + " litros en " + charges[1].days + " dias ";
-//       res(result);
-//   }).sort({date:-1}).limit(2);
-// };
   // FuelCharge.aggregate([
     // {
     //   "$match": {"car":"polo"}
@@ -80,28 +65,3 @@ exports.getLastCharges = function(callback) {
   //   if(err) console.log(err);
   //     console.log(results);
   // });
-
-  //return FuelCharge.aggregate(aggregateOpts).exec();
-  
-  // FuelCharge.aggregate([
-  //   {"group": {
-  //     "_id": "$car"
-  //   }},
-  //   {"$project":{
-  //     "_id":0,
-  //     "car":"$_id"
-  //   }}
-  //   ],function(err,results){
-  //     if(err) console.log(err);
-  //     console.log("/*/*/*/getLastCharges*/*//*", results);
-  //   }).exec();
-      
-  
-  
-  // FuelCharge.aggregate([
-  //     {"$sort": {date: -1}},
-  //     {"$project": {"car":1, "date":1}}
-  //   ], function(err, results){
-  //     if(err) throw err;
-  //     return results;
-  //   });
