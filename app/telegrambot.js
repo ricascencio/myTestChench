@@ -116,12 +116,6 @@ processMessage(req, res) {
                     }, function(err) {
                       console.error('The promise was rejected', err, err.stack);
                     });
-
-                // actions.getLastCharges(function(result){
-                //     console.log("actions.getLastCharges TELEGRAM");
-                //     messageText = result;
-                // });
-                
                 }
 
             if (chatId && messageText) {
@@ -209,14 +203,6 @@ processMessage(req, res) {
         return 'En ' + km + ' kms tuviste un rendimiento de ' + efficiency;
     }
     
-    lastCharges(res){
-        actions.getLastCharges(function(result){
-            console.log("actions.getLastCharges TELEGRAM");
-            res(result);
-        });
-    }
-    
-
     reply(msg) {
         // https://core.telegram.org/bots/api#sendmessage
         request.post(this._telegramApiUrl + '/sendMessage', {
