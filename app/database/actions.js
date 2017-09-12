@@ -34,13 +34,8 @@ exports.addFuelCharge = function(charge)  {
   }).sort({date:-1}).limit(1);
 };
 
-exports.getLastCharges = function(self, callback) {
+exports.getLastCharges = function(callback) {
    connect();
-  // FuelCharge.find().sort({date:-1}).limit(2).then(function(err, charges){
-  //   if(err) console.log(err);
-  //   //console.log("****CHARGES ACTIONS", charges);
-  //   return charges;
-  // });
   FuelCharge.find({}, function(err, charges){
     if(err) console.log(err);
     callback(charges);

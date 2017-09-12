@@ -21,6 +21,7 @@ const uuid = require('node-uuid');
 const request = require('request');
 const actions = require('./database/actions.js');
 
+var self;
 
 module.exports = class TelegramBot {
 
@@ -61,6 +62,7 @@ module.exports = class TelegramBot {
         console.log('Starting bot on ' + this._webhookUrl);
 
         this._telegramApiUrl = 'https://api.telegram.org/bot' + botConfig.telegramToken;
+        self = this;
     }
 
     start(responseCallback, errCallback){
@@ -108,12 +110,13 @@ processMessage(req, res) {
             if(updateObject.result.action === "calcularConsumo"){                                
                 messageText = this.calculateEfficiency(updateObject);
             }else if(updateObject.result.action === "getLastCharges"){
-                actions.getLastCharges(self, function(charges) {
-                console.log('The promise was fulfilled with charges!');
-                var result = {};
-                result[0] = charges[0].car + ": Consumo de " + charges[0].efficency + " km/l. " + charges[0].liters + " litros en " + charges[0].days + " dias ";
-                result[1] = charges[1].car + ": Consumo de " + charges[1].efficency + " km/l. " + charges[1].liters + " litros en " + charges[1].days + " dias ";
-                messageText = result;
+                console.log("**IN**");
+                actions.getLastCharges(function(charges) {
+                console.log('The promise was fulfilled with charges!', charges);
+                
+                messageText = charges[0].car + ": Consumo de " + charges[0].efficency + " km/l. " + charges[0].liters + " litros en " + charges[0].days + " dias. " + charges[1].car + ": Consumo de " + charges[1].efficency + " km/l. " + charges[1].liters + " litros en " + charges[1].days + " dias ";
+                
+                console.log("***MESSAGETEXT ", messageText);
             
             //******
                 if (chatId && messageText) {
@@ -174,7 +177,7 @@ processMessage(req, res) {
             
             }, function(err) {
               console.error('The promise was rejected', err, err.stack);
-            }).call(this);
+            });
             }
 
             // if (chatId && messageText) {
