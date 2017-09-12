@@ -107,8 +107,8 @@ processMessage(req, res) {
             if(updateObject.result.action === "calcularConsumo"){                                
                 messageText = this.calculateEfficiency(updateObject);
             }else if(updateObject.result.action === "getLastCharges"){
-                actions.getLastCharges().then(function(charges) {
-                    console.log('The promise was fulfilled with items!', charges);
+                actions.getLastCharges(function(charges) {
+                    console.log('The promise was fulfilled with charges!');
                     var result = {};
                     result[0] = charges[0].car + ": Consumo de " + charges[0].efficency + " km/l. " + charges[0].liters + " litros en " + charges[0].days + " dias ";
                     result[1] = charges[1].car + ": Consumo de " + charges[1].efficency + " km/l. " + charges[1].liters + " litros en " + charges[1].days + " dias ";
