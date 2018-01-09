@@ -20,6 +20,7 @@ const apiai = require('apiai');
 const uuid = require('node-uuid');
 const request = require('request');
 const actions = require('./database/actions.js');
+const bitso = require("./bitso");
 
 var self;
 
@@ -118,6 +119,14 @@ processMessage(req, res) {
                 }, function(err) {
                     console.error('The promise was rejected', err, err.stack);
                 });
+            }else if(updateObject.result.action === "getPrice"){
+                bitso.getTradeInfo(function(book, price) {
+                    console.log('The promise was fulfilled with price!');
+                    messageText = 'last: ' + price.last + 'vwap: ' + price.vwap;
+                    self.sendProcessedMessage(self, req, res, chatId, messageText);
+                }, function(err) {
+                    console.error('The promise was rejected', err, err.stack);
+                });
             }
         } else {
             console.log('Empty message (updateObject && updateObject.message)');
@@ -206,6 +215,7 @@ processMessage(req, res) {
         
         return 'En ' + km + ' kms tuviste un rendimiento de ' + efficiency;
     }
+
 
     reply(msg) {
         // https://core.telegram.org/bots/api#sendmessage
