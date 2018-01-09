@@ -60,8 +60,9 @@ exports.getTradeInfo = function(book, callb){
                 //if(err) console.log(err);
                 var result = JSON.parse(chunk);
                 price = {
-                    last: result.payload.last,
-                    vwap: result.payload.vwap
+                    book: book,
+                    last: parseFloat(result.payload.last).toFixed(2),
+                    vwap: parseFloat(result.payload.vwap).toFixed(2)
                 };
             });
             res.on('end', function(){
