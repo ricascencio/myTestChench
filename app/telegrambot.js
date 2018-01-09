@@ -120,7 +120,8 @@ processMessage(req, res) {
                     console.error('The promise was rejected', err, err.stack);
                 });
             }else if(updateObject.result.action === "getPrice"){
-                bitso.getTradeInfo(function(book, price) {
+                var book = updateObject.result.parameters.book;
+                bitso.getTradeInfo(book, function(price) {
                     console.log('The promise was fulfilled with price!');
                     messageText = 'last: ' + price.last + 'vwap: ' + price.vwap;
                     self.sendProcessedMessage(self, req, res, chatId, messageText);
