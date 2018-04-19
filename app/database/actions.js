@@ -9,18 +9,18 @@ const connect = () => {
   if (!db) {
     const dbURL = process.env.DB_URL || config.get('DB_URL');
     mongoose.connect(dbURL, {useMongoClient:true});
-    db = mongoose.connection;   
+    db = mongoose.connection;
   }
 };
 
 exports.addFuelCharge = function(charge)  {
   connect();
   FuelCharge.find({"car": charge.car}, function (err, fuelCharge){
-      if (err) return console.error("ERR",err);    
+      if (err) return console.error("ERR",err);
       var diffDays = 0;
       if(fuelCharge[0]){
         var timeDiff = Math.abs(charge.date.getTime() - fuelCharge[0].date.getTime());
-        diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));  
+        diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
       }
       const newRow = new FuelCharge({
           date: charge.date,
@@ -41,27 +41,3 @@ exports.getLastCharges = function(callback) {
     callback(charges);
   }).sort({date:-1}).limit(2);
 };
-
-  // FuelCharge.aggregate([
-    // {
-    //   "$match": {"car":"polo"}
-    // },
-    // {
-    //     "$unwind": "$fuelcharges"
-    // },
-  //   {
-  //       "$group": {
-  //           "_id": "$_id"
-  //           //"kms": { "$sum": "$kms" }
-  //       }
-  //   },
-  //   {
-  //     "$project": {
-  //       "car": "$car",
-  //       "days": "$days"
-  //     }
-  //   }
-  // ], function(err, results){
-  //   if(err) console.log(err);
-  //     console.log(results);
-  // });

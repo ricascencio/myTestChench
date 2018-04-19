@@ -103,18 +103,20 @@ processMessage(req, res) {
         }
 
         let updateObject = req.body;
-        
+
         if (updateObject && updateObject.result.action) {
             var chatId = req.body.originalRequest.data.message.chat.id;
             let messageText = '';
-                        
-            if(updateObject.result.action === "calcularConsumo"){                                
+
+            if(updateObject.result.action === "calcularConsumo"){
                 messageText = this.calculateEfficiency(updateObject);
+                console.log(messageText);
                 self.sendProcessedMessage(self, req, res, chatId, messageText);
             }else if(updateObject.result.action === "getLastCharges"){
                 actions.getLastCharges(function(charges) {
                     console.log('The promise was fulfilled with charges!');
                     messageText = charges[0].car + ": " + charges[0].efficency + " km/l. " + charges[0].liters + " litros en " + charges[0].days + " dias. " + charges[1].car + ": " + charges[1].efficency + " km/l. " + charges[1].liters + " litros en " + charges[1].days + " dias ";
+                    console.log(messageText);
                     self.sendProcessedMessage(self, req, res, chatId, messageText);
                 }, function(err) {
                     console.error('The promise was rejected', err, err.stack);
@@ -134,7 +136,7 @@ processMessage(req, res) {
             return TelegramBot.createResponse(res, 200, 'Empty message');
         }
     }
-    
+
     sendProcessedMessage(self, req, res, chatId, messageText){
         if (chatId && messageText) {
             if (!self._sessionIds.has(chatId)) {
@@ -188,15 +190,15 @@ processMessage(req, res) {
             return TelegramBot.createResponse(res, 200, 'Empty message');
         }
     }
-    
+
     //calculate fuel efficiency
     calculateEfficiency(updateObject){
         var km = updateObject.result.parameters.kilometros;
         var lts = updateObject.result.parameters.litros;
         var car = updateObject.result.parameters.coche;
-        
+
         var efficiency = (km/lts).toFixed(2);
-        
+
         //search and insert charges only for my cars
         if(car === 'polo' || car === 'versa'){
 
@@ -208,12 +210,12 @@ processMessage(req, res) {
                     car: car,
                     days: 0
             };
-            
+
             actions.addFuelCharge(charge, function(result){
                 console.log(result);
             });
         }
-        
+
         return 'En ' + km + ' kms tuviste un rendimiento de ' + efficiency;
     }
 
