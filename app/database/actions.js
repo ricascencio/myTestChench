@@ -10,6 +10,8 @@ const connect = () => {
     const dbURL = process.env.DB_URL || config.get('DB_URL');
     mongoose.connect(dbURL, {useMongoClient:true});
     db = mongoose.connection;
+    console.log('dbURL', dbURL);
+    console.log('DB', db);
   }
 };
 
